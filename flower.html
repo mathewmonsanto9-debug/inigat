@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Tulip Bouquet</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+  --bg:#0f0003;
+  --stem:#1b4332;
+  --glow:#5cffc7;
+  --outline: rgba(0, 0, 0, 0.2);
+  --heart-color: #ff1f5a;
+  --ribbon-red: #d00000;
+  --ribbon-shine: #ff4d4d;
+}
+
+html,body{
+  margin:0; padding:0;
+  width:100%; height:100%;
+  background:radial-gradient(circle,#2c0008,var(--bg));
+  display:flex; flex-direction:column; align-items:center;
+  font-family:'Great Vibes',cursive; color:white; overflow:hidden;
+}
+
+/* TEXT AREA */
+.header-container { text-align: center; margin-top: 20px; z-index: 10; }
+h1{ margin: 0; font-size: 3.5rem; opacity: 0; transition: opacity 2s ease; text-shadow: 0 0 20px rgba(255, 31, 90, 0.6); }
+h2{ margin: 0; font-size: 1.6rem; opacity: 0; transition: opacity 2s ease; }
+.show{ opacity:1 !important; }
+
+/* THE BIG PULSING HEART */
+.main-heart-container {
+  margin-top: 35px;
+  margin-bottom: -50px;
+  opacity: 0;
+  transition: opacity 3s ease;
+  z-index: 8;
+  display: flex; justify-content: center;
+}
+.main-heart {
+  width: 50px; height: 50px;
+  background-color: var(--heart-color);
+  clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.06 3.06 6.06 12 14.282 8.94-8.222 12-10.222 12-14.282 0-8.165-10.011-8.967-12-3.568z');
+  transform: scale(3);
+  animation: heartbeat 1.2s ease-in-out infinite, float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px var(--heart-color));
+}
+@keyframes heartbeat { 0%, 100% { transform: scale(3); } 30% { transform: scale(3.3); } }
+@keyframes float { 0%, 100% { margin-top: 0px; } 50% { margin-top: -10px; } }
+
+/* BOUQUET WORLD */
+.world {
+  width: 180px;
+  height: 350px;
+  margin-top: auto;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+}
+
+/* STEMS */
+.branch {
+  position: absolute;
+  bottom: 0;
+  width: 5px;
+  height: 0;
+  background: linear-gradient(to top, #0d1b14, var(--stem));
+  border-radius: 10px;
+  transform-origin: bottom center;
+  animation: grow 5s ease-out forwards;
+}
+@keyframes grow { to { height: 230px; } }
+
+.left { transform: rotate(-14deg); left: 75px; }
+.center { transform: rotate(0deg); left: 88px; }
+.right { transform: rotate(14deg); left: 101px; }
+
+/* PETALS */
+.flower {
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 120px;
+  display: flex; justify-content: center; align-items: flex-end;
+}
+.petal {
+  position: absolute; bottom: 0;
+  border-radius: 50% 50% 40% 40% / 80% 80% 20% 20%;
+  transform-origin: bottom center;
+  opacity: 0;
+  border: 1px solid var(--outline);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
+}
+.mid { width: 55px; height: 130px; z-index: 3; animation: bloomMid 3s ease-out forwards 3s; }
+.leftP { width: 45px; height: 105px; z-index: 2; animation: bloomLeft 3s ease-out forwards 3.5s; }
+.rightP { width: 45px; height: 105px; z-index: 2; animation: bloomRight 3s ease-out forwards 3.5s; }
+
+.red { background: linear-gradient(to top, #800020, #ff1f5a); }
+.pink { background: linear-gradient(to top, #b03060, #ff77aa); }
+.white { background: linear-gradient(to top, #d0d0d0, #ffffff); }
+
+@keyframes bloomMid { 0%{opacity:0; transform:scaleY(0);} 100%{opacity:1; transform:scaleY(1);} }
+@keyframes bloomLeft { 0%{opacity:0; transform:rotate(0deg) scale(0);} 100%{opacity:1; transform:translateX(-22px) rotate(-28deg) scale(1);} }
+@keyframes bloomRight { 0%{opacity:0; transform:rotate(0deg) scale(0);} 100%{opacity:1; transform:translateX(22px) rotate(28deg) scale(1);} }
+
+/* THE REALISTIC SATIN BOW */
+.ribbon-bouquet {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  z-index: 20;
+  animation: bowAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 4.8s;
+}
+@keyframes bowAppear { to { transform: translateX(-50%) scale(1.2); } }
+
+/* The Back Loops */
+.bow-loop-back {
+  width: 45px; height: 30px;
+  background: linear-gradient(135deg, #a00000, var(--ribbon-red));
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+}
+.loop-bl { transform: rotate(-40deg) translateX(-35px); }
+.loop-br { transform: rotate(40deg) translateX(0px); }
+
+/* The Main Loops */
+.bow-loop-front {
+  width: 55px; height: 35px;
+  background: linear-gradient(to bottom right, var(--ribbon-red), var(--ribbon-shine), var(--ribbon-red));
+  border-radius: 50% 50% 40% 40%;
+  position: absolute;
+  top: -5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.loop-fl { transform: rotate(-20deg) translateX(-50px); }
+.loop-fr { transform: rotate(20deg) translateX(0px); }
+
+/* The Center Knot */
+.bow-knot {
+  width: 18px; height: 18px;
+  background: radial-gradient(circle at center, var(--ribbon-shine), var(--ribbon-red));
+  border-radius: 4px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+/* The V-Cut Tails */
+.bow-tail {
+  width: 25px; height: 50px;
+  background: linear-gradient(to bottom, var(--ribbon-red), #800000);
+  position: absolute;
+  top: 10px;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 80%, 0% 100%);
+  z-index: -1;
+}
+.tail-l { transform: rotate(15deg) translateX(-20px); }
+.tail-r { transform: rotate(-15deg) translateX(0px); }
+
+/* POPPING HEARTS */
+.flower-heart {
+  position: absolute; width: 12px; height: 12px;
+  background: #ff4d6d;
+  clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.06 3.06 6.06 12 14.282 8.94-8.222 12-10.222 12-14.282 0-8.165-10.011-8.967-12-3.568z');
+  opacity: 0; bottom: 50px;
+}
+.h1 { animation: popHeart 4s ease-out forwards 4.5s; }
+.h2 { animation: popHeart 4s ease-out forwards 5s; }
+@keyframes popHeart {
+  0% { transform: scale(0) translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: scale(1.5) translateY(-150px) translateX(var(--tx)); opacity: 0; }
+}
+
+/* BG HEARTS */
+.bg-heart {
+  position: absolute; bottom: -20px;
+  background: rgba(255, 77, 109, 0.2);
+  clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.06 3.06 6.06 12 14.282 8.94-8.222 12-10.222 12-14.282 0-8.165-10.011-8.967-12-3.568z');
+  animation: floatUp linear forwards;
+}
+@keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+</style>
+</head>
+
+<body>
+
+<div class="header-container">
+  <h1 id="title">Happy Valentine’s Day</h1>
+  <h2 id="sub">I Love You Always, In All Ways</h2>
+</div>
+
+<div id="mainHeart" class="main-heart-container">
+  <div class="main-heart"></div>
+</div>
+
+<div class="world">
+  <!-- THE NEW BOW -->
+  <div class="ribbon-bouquet">
+    <div class="bow-loop-back loop-bl"></div>
+    <div class="bow-loop-back loop-br"></div>
+    <div class="bow-loop-front loop-fl"></div>
+    <div class="bow-loop-front loop-fr"></div>
+    <div class="bow-knot"></div>
+    <div class="bow-tail tail-l"></div>
+    <div class="bow-tail tail-r"></div>
+  </div>
+
+  <!-- LEFT RED -->
+  <div class="branch left">
+    <div class="flower">
+      <div class="flower-heart h1" style="--tx:-20px"></div>
+      <div class="petal mid red"></div>
+      <div class="petal leftP red"></div>
+      <div class="petal rightP red"></div>
+    </div>
+  </div>
+
+  <!-- CENTER PINK -->
+  <div class="branch center">
+    <div class="flower">
+      <div class="flower-heart h1" style="--tx:0px"></div>
+      <div class="petal mid pink"></div>
+      <div class="petal leftP pink"></div>
+      <div class="petal rightP pink"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT WHITE -->
+  <div class="branch right">
+    <div class="flower">
+      <div class="flower-heart h1" style="--tx:20px"></div>
+      <div class="petal mid white"></div>
+      <div class="petal leftP white"></div>
+      <div class="petal rightP white"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function createBgHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('bg-heart');
+  heart.style.left = Math.random() * 100 + "vw";
+  const size = Math.random() * 15 + 10;
+  heart.style.width = size + "px";
+  heart.style.height = size + "px";
+  heart.style.animationDuration = Math.random() * 5 + 7 + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 12000);
+}
+setInterval(createBgHeart, 600);
+
+setTimeout(()=>{
+  document.getElementById("title").classList.add("show");
+  document.getElementById("sub").classList.add("show");
+  document.getElementById("mainHeart").classList.add("show");
+  confetti({
+    particleCount: 120,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#ff1f5a', '#ff77aa', '#ffffff']
+  });
+}, 5500);
+</script>
+
+</body>
+</html>

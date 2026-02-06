@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naa koy isulti nimo... ❤️</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffeef2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+            z-index: 10;
+        }
+        h1 { color: #d63384; font-size: 1.4rem; margin-bottom: 15px; min-height: 70px; line-height: 1.4; }
+        .gif { width: 120px; margin-bottom: 15px; border-radius: 10px; }
+        
+        input[type="text"] {
+            width: 85%; padding: 12px; border: 2px solid #ff4d6d; border-radius: 10px;
+            margin-bottom: 15px; outline: none; text-align: center; font-size: 1rem;
+        }
+        .buttons { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
+        button {
+            padding: 10px 15px; font-size: 0.95rem; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .primary-btn { background-color: #ff4d6d; color: white; }
+        .choice-btn { background-color: #fff0f3; color: #d63384; border: 1px solid #ff4d6d; }
+        .choice-btn:hover { background-color: #ff4d6d; color: white; }
+
+        #noBtn { background-color: #888; color: white; position: relative; }
+        .success-msg { display: none; font-size: 1.5rem; color: #d63384; font-weight: bold; }
+        .hidden { display: none !important; }
+        #counter { font-size: 0.8rem; color: #ff4d6d; margin-bottom: 5px; font-weight: bold; }
+        .note { font-size: 0.75rem; color: #aaa; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- EMAIL FORM (mathewmonsanto9@gmail.com) -->
+    <form id="responseForm" action="https://formsubmit.co/mathewmonsanto9@gmail.com" method="POST" class="hidden">
+        <input type="hidden" name="_subject" value="Naay ni-respond sa imong Valentine Rizz! ❤️">
+        <input type="hidden" name="Tubag_sa_Hi" id="formGreeting">
+        <input type="hidden" name="Rizz_Reactions" id="formReactions">
+        <input type="hidden" name="Valentine_Answer" value="YES (Ni-pass gyud!)">
+        <input type="hidden" name="_next" value="https://formsubmit.co/thanks">
+        <input type="hidden" name="_captcha" value="false">
+    </form>
+
+    <!-- STAGE 1: GREETING -->
+    <div class="container" id="greetingBox">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1ZjRreGthbnlreHlqemZ4eXp5eHl6eHl6eHl6eHl6eHl6JnB0PWEmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/c76IJLufpNwSULPk77/giphy.gif" class="gif">
+        <h1>Hi, kumusta man ka? andam naka sakung mga rizz? haha ❤️</h1>
+        <input type="text" id="greetingInput" placeholder="Tubag diri..." autocomplete="off">
+        <br>
+        <button class="primary-btn" onclick="startRizz()">Next ✨</button>
+        <p class="note">Basaha palihog tanan ha? Ayaw og skip!</p>
+    </div>
+
+    <!-- STAGE 2: 10 BISAYA RIZZ LINES -->
+    <div class="container hidden" id="rizzBox">
+        <div id="counter">1 / 10</div>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHAyc3JueGZueXF6dzVnZzR4eHh4eHh4eHh4eHh4eHh4eHh4JnB0PWEmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/KztT2c4u8mYYUiMKdJ/giphy.gif" class="gif">
+        <h1 id="rizzText"></h1>
+        <div class="buttons" id="rizzChoices">
+            <!-- Ang JS na ang mag-ilis sa buttons diri -->
+        </div>
+    </div>
+
+    <!-- STAGE 3: THE QUESTION -->
+    <div class="container hidden" id="valentineBox">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1ZjRreGthbnlreHlqemZ4eXp5eHl6eHl6eHl6eHl6eHl6JnB0PWEmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/c76IJLufpNwSULPk77/giphy.gif" class="gif">
+        <h1> Can you be my valentine YES or NO?</h1>
+        <div class="buttons">
+            <button id="yesBtn" class="primary-btn" onclick="sayYes()">YES</button>
+            <button id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">NO</button>
+        </div>
+    </div>
+
+    <!-- STAGE 4: SUCCESS -->
+    <div id="successBox" class="success-msg">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmZ0ajJpY213YmZidmN6Z3dyYmZidmN6Z3dyYmZidmN6Z3dyJnB0PWEmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/G96zgIcQn1L2xpmMlr/giphy.gif" class="gif"><br>
+        KABALO KO MO-YES KA! ❤️🌹<br>
+        Nadawat na nako imong tubag. Kitakits sa 14!
+    </div>
+
+    <script>
+        const lines = [
+            "Dili ko maayu sa photography, pero nganong ma picture nako atung future duha.",
+            "Camera ba ka? Kay kada tan-aw nako nimo, mapahiyom man ko.",
+            "Naa kay mapa? Nawala man gud ko sa imong mga mata.",
+            "Kibaw kag latte? ako ako ako kibaw kay i like u a latte man haha",
+            "Kung pwede pa lang nako usabon ang alphabet, itapad jud nako ang 'U' ug 'I' para mag uban rata kanunay.",
+            "Murag kag google ay, kibaw kag ngano? Kay naa man nimo tanan akong gipangita.",
+            "Ang kinabuhi nga wala ka, murag bali nga lapis... wala’y pulos.",
+            "Sa tanan nga unsure nako nga decision, sa imuha rajud sure nga permi kang pilion",
+            "Nagtuon ko karon og important dates sa history. Gusto ka maapil sa ug mag himo ug atung history?",
+            "Bitaw... naa lang unta koy pangutana nimo nga importante kaayo..."
+        ];
+
+        let currentLine = 0;
+        let reactions = [];
+
+        function startRizz() {
+            const input = document.getElementById('greetingInput').value;
+            if(!input) {
+                alert("Tubaga sa ko palihog! 😊");
+                return;
+            }
+            document.getElementById('formGreeting').value = input;
+            document.getElementById('greetingBox').classList.add('hidden');
+            document.getElementById('rizzBox').classList.remove('hidden');
+            showNextRizz();
+        }
+
+        function showNextRizz() {
+            if (currentLine < lines.length) {
+                document.getElementById('rizzText').innerText = lines[currentLine];
+                document.getElementById('counter').innerText = (currentLine + 1) + " / 10";
+                
+                const choicesDiv = document.getElementById('rizzChoices');
+                
+                // KANI ANG LOGIC PARA SA IKA-NAPULO NGA LINE
+                if (currentLine === 9) { 
+                    choicesDiv.innerHTML = `<button class="choice-btn" onclick="recordReaction('unsa mn?')">unsa mn?</button>`;
+                } else {
+                    // Default buttons para sa line 1 to 9
+                    choicesDiv.innerHTML = `
+                        <button class="choice-btn" onclick="recordReaction('ah ka corny')">ah ka corny</button>
+                        <button class="choice-btn" onclick="recordReaction('sure ba? haha')">sure ba? haha</button>
+                        <button class="choice-btn" onclick="recordReaction('yiee burit haha')">yiee burit haha</button>
+                    `;
+                }
+            } else {
+                document.getElementById('formReactions').value = reactions.join(" | ");
+                document.getElementById('rizzBox').classList.add('hidden');
+                document.getElementById('valentineBox').classList.remove('hidden');
+            }
+        }
+
+        function recordReaction(type) {
+            reactions.push(`Line ${currentLine+1}: ${type}`);
+            currentLine++;
+            showNextRizz();
+        }
+
+        function moveNo() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
+        function sayYes() {
+            document.getElementById('valentineBox').classList.add('hidden');
+            document.getElementById('successBox').style.display = 'block';
+            document.body.style.backgroundColor = '#ffc0cb';
+            document.getElementById('responseForm').submit();
+        }
+    </script>
+</body>
+</html>
